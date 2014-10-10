@@ -40,13 +40,18 @@ client_stream.user do |object|
     end
     
     # なんでもしますから！ -> ん？いまなんでもするって言ったよね？
-    if object.text =~ /(なん|何)でもしますから(!|！)/
+    if object.text =~ /(なん|何)でもしますから[!！]/
       #=> オペレーターのツイートと "RT" の含まれているツイートは無視する
       if object.user.id == OPERATOR_USERID || object.text =~ /RT/i
       else
         #=> 「なんでもしますから！」という文字列が含まれているツイートに対して「ん？」と reply をする
         client_rest.update("@#{object.user.screen_name} ん？", options = {in_reply_to_status_id: object.id})
       end
+    end
+    
+    # スミスニキロリコン用
+    if object.user.id == '1237438117'.to_i && object.text =~ /(ロリ|幼女|小学生)/
+      client_rest.update("@#{object.user.screen_name} またロリコンか、壊れるなあ・・・ #スミスニキやっぱり", options = {in_reply_to_status_id: object.id})
     end
     
   end
